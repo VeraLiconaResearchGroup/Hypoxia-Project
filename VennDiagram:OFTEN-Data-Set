@@ -1,0 +1,25 @@
+library(readr)
+library(readxl)
+library(VennDiagram)
+library(venn)
+library(ggVennDiagram)
+library(gplots)
+
+##import data
+
+LCOFTEN1.df =  read.table("/Users/simranjain/Downloads/OFTENnodesStats_Lactate_vs_Control.txt", sep = '\t', header = TRUE)
+OHOFTEN.df = read_excel("/Users/simranjain/Downloads/OFTEN_Osc_vs_Hypoxia.xlsx")
+HCOFTEN.df = read.table("/Users/simranjain/Downloads/OFTENnodesStats_HypoxiavsControl.txt", sep = '\t', header = TRUE)
+OCOFTEN.df = read.table("/Users/simranjain/Downloads/OFTEN_Osc_vs_Control.csv", sep = '\t', header = TRUE)
+
+##turn data into a list
+x = list("Lactate v C" = LCOFTEN1.df$Ensembl, "Hyp v C" = HCOFTEN.df$Ensembl, "Osc v Hyp" = OHOFTEN.df$`Ensembl (1)`, "Osc v C" = OCOFTEN.df$CONNECTIVITY_RATIO)
+
+##plot Venn Diagram
+OFTENVenn = ggVennDiagram(x)
+
+#Pull items from intersections
+ItemsList <- gplots::venn(x, show.plot = FALSE)
+OFTENoverlap = as.data.frame(unlist(attributes(ItemsList)$intersections))
+print(attributes(ItemsList)$intersections)
+
